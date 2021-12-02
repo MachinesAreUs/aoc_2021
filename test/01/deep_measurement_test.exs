@@ -9,22 +9,22 @@ defmodule DeepMeasurementTest do
       |> File.stream!()
       |> Stream.map(&to_int(&1))
 
-    {:ok, sample_measurements: sample, challenge_measurements: challenge}
+    {:ok, sample: sample, challenge: challenge}
   end
 
-  test "1st part. Sample is covered", %{sample_measurements: measurements} do
+  test "1st part. Sample is covered", %{sample: measurements} do
     assert DeepMeasurement.count_increases(measurements) == 7
   end
 
-  test "1st part. AoC challenge", %{challenge_measurements: measurements} do
+  test "1st part. AoC challenge", %{challenge: measurements} do
     assert DeepMeasurement.count_increases(measurements) == 1167
   end
 
-  test "2nd part. Sample is covered", %{sample_measurements: measurements} do
+  test "2nd part. Sample is covered", %{sample: measurements} do
     assert DeepMeasurement.count_window_increases(measurements) == 5
   end
 
-  test "2nd part. AoC challenge", %{challenge_measurements: measurements} do
+  test "2nd part. AoC challenge", %{challenge: measurements} do
     assert DeepMeasurement.count_window_increases(measurements) == 1130
   end
 

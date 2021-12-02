@@ -1,11 +1,10 @@
 defmodule DeepMeasurement do
   @moduledoc false
 
-  @absurdly_deep 1_000_000_000_000
-
   def count_increases(measurements) do
+    first = Enum.at(measurements, 0)
     {_, increases} =
-      Enum.reduce(measurements, {@absurdly_deep, 0}, fn m, {prev, count} ->
+      Enum.reduce(measurements, {first, 0}, fn m, {prev, count} ->
         if m > prev, do: {m, count + 1}, else: {m, count}
       end)
     increases

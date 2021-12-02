@@ -24,3 +24,7 @@ aoc_bunsan_2021-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Vim files
+*.swp
+*.swo
