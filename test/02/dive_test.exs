@@ -52,7 +52,6 @@ defmodule DiveTest do
         {type, val}
       end)
 
-    IO.puts Dive.corrected_sum(course)
-    #assert Dive.corrected_sum(course) == 1451208
+    assert Dive.corrected_sum(course) == 1620141160
   end
 end
