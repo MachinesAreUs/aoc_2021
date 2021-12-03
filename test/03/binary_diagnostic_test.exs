@@ -28,7 +28,7 @@ defmodule BinaryDiagnosticTest do
   end
 
   test "1st part. AoC challenge", %{challenge: input} do
-    assert BinaryDiagnostic.power_comsumption(input) == 3633500
+    assert BinaryDiagnostic.power_comsumption(input) == 3_633_500
   end
 
   test "2nd part. Sample input", %{sample: input} do
@@ -36,6 +36,6 @@ defmodule BinaryDiagnosticTest do
   end
 
   test "2nd part. AoC challenge", %{challenge: input} do
-    assert BinaryDiagnostic.life_support(input) == 4550283
+    assert BinaryDiagnostic.life_support(input) == 4_550_283
   end
 end

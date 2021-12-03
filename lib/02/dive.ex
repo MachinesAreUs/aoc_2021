@@ -1,4 +1,5 @@
 defmodule Dive do
+  @moduledoc false
 
   def sum(course) do
     {h, v} = calculate_coords(course)
@@ -18,7 +19,7 @@ defmodule Dive do
   end
 
   def corrected_sum(course) do
-    {h_pos, depth, aim} = calculate_correct_coords(course)
+    {h_pos, depth, _aim} = calculate_correct_coords(course)
     h_pos * depth
   end
 

@@ -1,4 +1,5 @@
 defmodule BinaryDiagnostic do
+  @moduledoc false
 
   @one "1"
   @zero "0"
@@ -38,56 +39,48 @@ defmodule BinaryDiagnostic do
   # 2nd part
 
   def life_support(report) do
-    {o2_rating, co2_rating} = life_support_calc(report)
+    {o2_rating, co2_rating} = calc_life_support(report)
     o2_rating * co2_rating
   end
 
-  def life_support_calc(report) do
+  def calc_life_support(report) do
     report_digits = to_digits(report)
-    o2_rating = calc_o2_rating(0, report_digits)
-    co2_rating = calc_co2_rating(0, report_digits)
+    o2_rating = o2_rating(report_digits, 0)
+    co2_rating = co2_rating(report_digits, 0)
     {o2_rating, co2_rating}
   end
 
-  def calc_o2_rating(_, [h | []]) do
+  def o2_rating([h | []], _) do
     digits_to_int(h)
   end
 
-  def calc_o2_rating(idx, candidates) do
+  def o2_rating(candidates, idx) do
+    candidates
+    |> filter_candidates(idx, fn a, b -> a >= b end)
+    |> o2_rating(idx + 1)
+  end
+
+  def co2_rating([h | []], _) do
+    digits_to_int(h)
+  end
+
+  def co2_rating(candidates, idx) do
+    candidates
+    |> filter_candidates(idx, fn a, b -> a < b end)
+    |> co2_rating(idx + 1)
+  end
+
+  def filter_candidates(candidates, idx, comparator) do
     column = nth_column(idx, candidates)
 
     {ones, zeroes} = count_digits(column)
 
-    new_candidates =
-      if ones >= zeroes do
-        filter_candidates(candidates, idx, @one)
-      else
-        filter_candidates(candidates, idx, @zero)
-      end
+    value_to_filter = if apply(comparator, [ones, zeroes]), do: @one, else: @zero
 
-    calc_o2_rating(idx + 1, new_candidates)
+    filter_candidates_by_col_value(candidates, idx, value_to_filter)
   end
 
-  def calc_co2_rating(_, [h | []]) do
-    digits_to_int(h)
-  end
-
-  def calc_co2_rating(idx, candidates) do
-    column = nth_column(idx, candidates)
-
-    {ones, zeroes} = count_digits(column)
-
-    new_candidates =
-      if ones < zeroes do
-        filter_candidates(candidates, idx, @one)
-      else
-        filter_candidates(candidates, idx, @zero)
-      end
-
-    calc_co2_rating(idx + 1, new_candidates)
-  end
-
-  defp filter_candidates(candidates, idx, val) do
+  def filter_candidates_by_col_value(candidates, idx, val) do
     Enum.filter(candidates, fn digits -> Enum.at(digits, idx) == val end)
   end
 

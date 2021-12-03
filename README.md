@@ -1,4 +1,4 @@
-# AocBunsan2021
+# Aoc2021
 
 **TODO: Add description**
 
@@ -10,7 +10,7 @@ by adding `aoc_bunsan_2021` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:aoc_bunsan_2021, "~> 0.1.0"}
+    {:aoc_2021, "~> 0.1.0"}
   ]
 end
 ```

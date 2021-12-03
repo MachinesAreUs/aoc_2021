@@ -29,7 +29,7 @@ defmodule DiveTest do
   end
 
   test "1st part. AoC challenge", %{challenge: input} do
-    assert Dive.sum(input) == 1451208
+    assert Dive.sum(input) == 1_451_208
   end
 
   test "2nd part. Sample input", %{sample: input} do
@@ -37,6 +37,6 @@ defmodule DiveTest do
   end
 
   test "2nd part. AoC challenge", %{challenge: input} do
-    assert Dive.corrected_sum(input) == 1620141160
+    assert Dive.corrected_sum(input) == 1_620_141_160
   end
 end
