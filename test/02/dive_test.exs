@@ -1,8 +1,8 @@
 defmodule DiveTest do
   use ExUnit.Case
 
-  test "1st part. Sample input" do
-    course =
+  setup do
+    sample =
       [
         {"forward", 5},
         {"down", 5},
@@ -12,11 +12,7 @@ defmodule DiveTest do
         {"forward", 2}
       ]
 
-    assert Dive.sum(course) == 150
-  end
-
-  test "1st part. AoC challenge" do
-    course =
+    challenge =
       "./resources/02_course.txt"
       |> File.stream!()
       |> Stream.map(fn str ->
@@ -25,33 +21,22 @@ defmodule DiveTest do
         {type, val}
       end)
 
-    assert Dive.sum(course) == 1451208
+    {:ok, sample: sample, challenge: challenge}
   end
 
-  test "2nd part. Sample input" do
-    course =
-      [
-        {"forward", 5},
-        {"down", 5},
-        {"forward", 8},
-        {"up", 3},
-        {"down", 8},
-        {"forward", 2}
-      ]
-
-    assert Dive.corrected_sum(course) == 900
+  test "1st part. Sample input", %{sample: input} do
+    assert Dive.sum(input) == 150
   end
 
-  test "2nd part. AoC challenge" do
-    course =
-      "./resources/02_course.txt"
-      |> File.stream!()
-      |> Stream.map(fn str ->
-        [type, val_str] = String.split(str)
-        {val, _} = Integer.parse(val_str)
-        {type, val}
-      end)
+  test "1st part. AoC challenge", %{challenge: input} do
+    assert Dive.sum(input) == 1451208
+  end
 
-    assert Dive.corrected_sum(course) == 1620141160
+  test "2nd part. Sample input", %{sample: input} do
+    assert Dive.corrected_sum(input) == 900
+  end
+
+  test "2nd part. AoC challenge", %{challenge: input} do
+    assert Dive.corrected_sum(input) == 1620141160
   end
 end
