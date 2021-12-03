@@ -1,30 +1,42 @@
 defmodule BinaryDiagnostic do
 
+  @one "1"
+  @zero "0"
+
+  # 1st part
+
   def power_comsumption(report) do
-    {gamma, epsilon} = power_comsumption_calc(report)
+    {gamma, epsilon} = calc_power_comsumption_params(report)
     gamma * epsilon
   end
 
-  def power_comsumption_calc(report) do
-    bits = Enum.map(report, fn str -> String.graphemes(str) end)
+  def calc_power_comsumption_params(report) do
+    {gamma, epsilon} =
+      report
+      |> to_digits()
+      |> calc_gamma_epsilon()
 
-    calculations = Enum.zip_with(bits, fn digits ->
-      ones = Enum.count(digits, fn digit -> digit == "1" end)
-      zeroes = Enum.count(digits, fn digit -> digit == "0" end)
-      {
-        (if ones >= zeroes, do: "1", else: "0"),
-        (if ones <= zeroes, do: "1", else: "0")
-      }
-    end)
-
-    {gamma, epsilon} = Enum.reduce(calculations, {"", ""}, fn {d1, d2}, {gamma, epsilon} ->
-      {gamma <> d1, epsilon <> d2}
-    end)
-
-    {gamma_dec, _} = Integer.parse(gamma, 2)
-    {epsilon_dec, _} = Integer.parse(epsilon, 2)
-    {gamma_dec, epsilon_dec}
+    {binary_to_decimal(gamma), binary_to_decimal(epsilon)}
   end
+
+  def calc_gamma_epsilon(report_digits) do
+    calculations = Enum.zip_with(report_digits, &calc_digits/1)
+
+    Enum.reduce(calculations, {"", ""}, fn {d1, d2}, {gamma, epsilon} ->
+       {gamma <> d1, epsilon <> d2}
+    end)
+  end
+
+  def calc_digits(digits_column) do
+    ones = Enum.count(digits_column, fn digit -> digit == @one end)
+    zeroes = Enum.count(digits_column, fn digit -> digit == @zero end)
+    {
+      (if ones >= zeroes, do: @one, else: @zero), # beta
+      (if ones <= zeroes, do: @one, else: @zero) # epsilon
+    }
+  end
+
+  # 2nd part
 
   def life_support(report) do
     {o2_rating, co2_rating} = life_support_calc(report)
@@ -32,15 +44,10 @@ defmodule BinaryDiagnostic do
   end
 
   def life_support_calc(report) do
-    bits = Enum.map(report, fn str -> String.graphemes(str) end)
-    o2_rating = calc_o2_rating(0, bits)
-    co2_rating = calc_co2_rating(0, bits)
+    report_digits = to_digits(report)
+    o2_rating = calc_o2_rating(0, report_digits)
+    co2_rating = calc_co2_rating(0, report_digits)
     {o2_rating, co2_rating}
-  end
-
-  defp digits_to_int(digits) do
-    {val, _} = digits |> Enum.join |> Integer.parse(2)
-    val
   end
 
   def calc_o2_rating(_, [h | []]) do
@@ -81,5 +88,18 @@ defmodule BinaryDiagnostic do
       end
     #IO.inspect candidates
     calc_co2_rating(idx + 1, candidates)
+  end
+
+  defp digits_to_int(digits) do
+    digits |> Enum.join |> binary_to_decimal()
+  end
+
+  defp to_digits(report) do
+    Enum.map(report, fn str -> String.graphemes(str) end)
+  end
+
+  defp binary_to_decimal(bin) do
+    {dec, _} = Integer.parse(bin, 2)
+    dec
   end
 end
