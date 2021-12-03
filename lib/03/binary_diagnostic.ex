@@ -28,8 +28,7 @@ defmodule BinaryDiagnostic do
   end
 
   def calc_digits(digits_column) do
-    ones = Enum.count(digits_column, fn digit -> digit == @one end)
-    zeroes = Enum.count(digits_column, fn digit -> digit == @zero end)
+    {ones, zeroes} = count_digits(digits_column)
     {
       (if ones >= zeroes, do: @one, else: @zero), # beta
       (if ones <= zeroes, do: @one, else: @zero) # epsilon
@@ -54,40 +53,54 @@ defmodule BinaryDiagnostic do
     digits_to_int(h)
   end
 
-  def calc_o2_rating(idx, report) do
-    column = Enum.map(report, fn digits -> Enum.at(digits, idx) end)
+  def calc_o2_rating(idx, candidates) do
+    column = nth_column(idx, candidates)
 
-    ones = Enum.count(column, fn digit -> digit == "1" end)
-    zeroes = Enum.count(column, fn digit -> digit == "0" end)
+    {ones, zeroes} = count_digits(column)
 
-    candidates =
+    new_candidates =
       if ones >= zeroes do
-        Enum.filter(report, fn digits -> Enum.at(digits, idx) == "1" end)
+        filter_candidates(candidates, idx, @one)
       else
-        Enum.filter(report, fn digits -> Enum.at(digits, idx) == "0" end)
+        filter_candidates(candidates, idx, @zero)
       end
-    #IO.inspect candidates
-    calc_o2_rating(idx + 1, candidates)
+
+    calc_o2_rating(idx + 1, new_candidates)
   end
 
   def calc_co2_rating(_, [h | []]) do
     digits_to_int(h)
   end
 
-  def calc_co2_rating(idx, report) do
-    column = Enum.map(report, fn digits -> Enum.at(digits, idx) end)
+  def calc_co2_rating(idx, candidates) do
+    column = nth_column(idx, candidates)
 
-    ones = Enum.count(column, fn digit -> digit == "1" end)
-    zeroes = Enum.count(column, fn digit -> digit == "0" end)
+    {ones, zeroes} = count_digits(column)
 
-    candidates =
+    new_candidates =
       if ones < zeroes do
-        Enum.filter(report, fn digits -> Enum.at(digits, idx) == "1" end)
+        filter_candidates(candidates, idx, @one)
       else
-        Enum.filter(report, fn digits -> Enum.at(digits, idx) == "0" end)
+        filter_candidates(candidates, idx, @zero)
       end
-    #IO.inspect candidates
-    calc_co2_rating(idx + 1, candidates)
+
+    calc_co2_rating(idx + 1, new_candidates)
+  end
+
+  defp filter_candidates(candidates, idx, val) do
+    Enum.filter(candidates, fn digits -> Enum.at(digits, idx) == val end)
+  end
+
+  # Util functions
+
+  defp nth_column(idx, matrix) do
+    Enum.map(matrix, fn digits -> Enum.at(digits, idx) end)
+  end
+
+  defp count_digits(digits) do
+    ones = Enum.count(digits, fn digit -> digit == @one end)
+    zeroes = Enum.count(digits, fn digit -> digit == @zero end)
+    {ones, zeroes}
   end
 
   defp digits_to_int(digits) do
