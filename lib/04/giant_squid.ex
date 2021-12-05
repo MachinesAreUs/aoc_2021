@@ -1,6 +1,8 @@
 defmodule GiantSquid do
   @moduledoc false
 
+  # 1st part
+
   def bingo_winner(nums, boards) do
     solve(nums, to_marked_boards(boards))
   end
@@ -66,4 +68,25 @@ defmodule GiantSquid do
 
   defp transpose(mtx), do: Enum.zip_with(mtx, &(&1))
 
+  # 2nd part
+
+  def last_winner(nums, boards) do
+    solve2(nums, [], to_marked_boards(boards))
+  end
+
+  def solve2([], winners, _) do
+    {last_winner, num} = hd(winners)
+    score(num, last_winner)
+  end
+
+  def solve2([h | t], winners,  boards) do
+    new_boards = mark_boards(boards, h)
+    winner = find_winner(new_boards)
+    case winner do
+      nil -> solve2(t, winners, new_boards)
+      _ ->
+        rem_boards = new_boards -- [winner]
+        solve2(t, [{winner, h} | winners], rem_boards)
+    end
+  end
 end

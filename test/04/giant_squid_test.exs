@@ -48,4 +48,13 @@ defmodule GiantSquidTest do
   test "1st part. AoC challeng", %{challenge: [nums: nums, boards: boards]} do
     assert GiantSquid.bingo_winner(nums, boards) == 54_275
   end
+
+  test "2nd part. Sample input", %{sample: [nums: nums, boards: boards]} do
+    assert GiantSquid.last_winner(nums, boards) == 1_924
+  end
+
+  test "2nd part. AoC challeng", %{challenge: [nums: nums, boards: boards]} do
+    IO.puts GiantSquid.last_winner(nums, boards)
+    #assert GiantSquid.last_winner(nums, boards) == 54_275
+  end
 end
