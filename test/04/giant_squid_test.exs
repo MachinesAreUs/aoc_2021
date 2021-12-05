@@ -54,7 +54,6 @@ defmodule GiantSquidTest do
   end
 
   test "2nd part. AoC challeng", %{challenge: [nums: nums, boards: boards]} do
-    IO.puts GiantSquid.last_winner(nums, boards)
-    #assert GiantSquid.last_winner(nums, boards) == 54_275
+    assert GiantSquid.last_winner(nums, boards) == 13_158
   end
 end

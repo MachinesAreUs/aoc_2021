@@ -71,22 +71,27 @@ defmodule GiantSquid do
   # 2nd part
 
   def last_winner(nums, boards) do
-    solve2(nums, [], to_marked_boards(boards))
+    solve2(nums, _winners = [], to_marked_boards(boards))
   end
 
   def solve2([], winners, _) do
-    {last_winner, num} = hd(winners)
+    {last_winner, num} = Enum.at(winners, -1)
     score(num, last_winner)
   end
 
   def solve2([h | t], winners,  boards) do
     new_boards = mark_boards(boards, h)
-    winner = find_winner(new_boards)
-    case winner do
-      nil -> solve2(t, winners, new_boards)
+    new_winners = find_all_winners(new_boards)
+    case new_winners do
+      [] -> solve2(t, winners, new_boards)
       _ ->
-        rem_boards = new_boards -- [winner]
-        solve2(t, [{winner, h} | winners], rem_boards)
+        rem_boards = new_boards -- new_winners
+        new_winners = Enum.map(new_winners, fn win -> {win, h} end)
+        solve2(t, winners ++ new_winners, rem_boards)
     end
+  end
+
+  def find_all_winners(boards) do
+    Enum.filter(boards, fn board -> is_winner?(board) end)
   end
 end
