@@ -30,4 +30,12 @@ defmodule HydrotermalVentureTest do
   test "1st part. AoC challenge", %{challenge: input} do
     assert HydrotermalVenture.line_overlaps(input) == 6_283
   end
+
+  test "2nd part. Sample input", %{sample: input} do
+    assert HydrotermalVenture.line_overlaps2(input) == 12
+  end
+
+  test "2nd part. AoC challenge", %{challenge: input} do
+    assert HydrotermalVenture.line_overlaps2(input) == 18_864
+  end
 end

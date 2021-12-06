@@ -3,6 +3,8 @@ defmodule HydrotermalVenture do
 
   @empty "."
 
+  # 1st part
+
   def line_overlaps(lines) do
     max_x = max_x(lines)
     max_y = max_y(lines)
@@ -79,5 +81,43 @@ defmodule HydrotermalVenture do
     Enum.map(0..(depth-1), fn _ ->
       Enum.map(0..(width-1), fn _ -> @empty end)
     end)
+  end
+
+  # 2nd part
+
+  def line_overlaps2(lines) do
+    max_x = max_x(lines)
+    max_y = max_y(lines)
+    mtx = empty_matrix(max_x + 1, max_y + 1)
+    mtx = mark_lines2(mtx, lines)
+    count_overlaps(mtx)
+  end
+
+  def mark_lines2(mtx, []), do: mtx
+
+  def mark_lines2(mtx, [h | t]) do
+    mtx = mark_line2(mtx, h)
+    mark_lines2(mtx, t)
+  end
+
+  def mark_line2(mtx, line = [{x1, y1}, {x2, y2}]) when x1 == x2 do
+    mark_line(mtx, line)
+  end
+
+  def mark_line2(mtx, line = [{x1, y1}, {x2, y2}]) when y1 == y2 do
+    mark_line(mtx, line)
+  end
+
+  def mark_line2(mtx, line = [{x1, y1}, {x2, y2}]) do
+    if is_45_degrees(line) do
+      Enum.zip(x1..x2, y1..y2)
+      |> Enum.reduce(mtx, fn {x, y}, acc -> mark_point(acc, {x, y}) end)
+    else
+      mtx
+    end
+  end
+
+  def is_45_degrees([{x1, y1}, {x2, y2}]) do
+    abs(x2 - x1) == abs(y2 - y1)
   end
 end
